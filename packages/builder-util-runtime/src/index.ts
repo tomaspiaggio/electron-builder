@@ -20,6 +20,7 @@ export {
   GithubOptions,
   KeygenOptions,
   BitbucketOptions,
+  GitlabOptions,
   SnapStoreOptions,
   PublishConfiguration,
   S3Options,

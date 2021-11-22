@@ -17,6 +17,7 @@ import { getCiTag, PublishContext, Publisher, PublishOptions, UploadTask } from 
 import { BintrayPublisher } from "./BintrayPublisher"
 import { GitHubPublisher } from "electron-publish/out/gitHubPublisher"
 import { MultiProgress } from "electron-publish/out/multiProgress"
+import { GitlabPublisher } from "./GitlabPublisher"
 import S3Publisher from "./s3/s3Publisher"
 import SpacesPublisher from "./s3/spacesPublisher"
 import { writeFile } from "fs/promises"
@@ -342,6 +343,9 @@ function requireProviderClass(provider: string, packager: Packager): any | null 
 
     case "bitbucket":
       return BitbucketPublisher
+
+    case "gitlab":
+      return GitlabPublisher
 
     default: {
       const name = `electron-publisher-${provider}`

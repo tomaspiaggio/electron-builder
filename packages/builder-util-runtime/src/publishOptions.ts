@@ -1,6 +1,6 @@
 import { OutgoingHttpHeaders } from "http"
 
-export type PublishProvider = "github" | "bintray" | "s3" | "spaces" | "generic" | "custom" | "snapStore" | "keygen" | "bitbucket"
+export type PublishProvider = "github" | "bintray" | "s3" | "spaces" | "generic" | "custom" | "snapStore" | "keygen" | "bitbucket" | "gitlab"
 
 // typescript-json-schema generates only PublishConfiguration if it is specified in the list, so, it is not added here
 export type AllPublishOptions =
@@ -14,6 +14,7 @@ export type AllPublishOptions =
   | KeygenOptions
   | SnapStoreOptions
   | BitbucketOptions
+  | GitlabOptions
 
 export interface PublishConfiguration {
   /**
@@ -190,10 +191,44 @@ export interface KeygenOptions extends PublishConfiguration {
 }
 
 /**
+ * Gitlab options.
+ * https://gitlab.com
+ * Define `GITLAB_DEPLOY_TOKEN` and `GITLAB_PROJECT_ID`.
+ *
+ * In order to create a deploy token, go to your project on gitlab, got to Settings > Repository > Deploy tokens
+ * and create a new one with the following permissions:
+ * - `read_package_registry`
+ * - `write_package_registry`
+ *
+ * The `projectId` can be found on going to the repository > Settings > General and the project id should be grayed to the right of the name
+ */
+export interface GitlabOptions extends PublishConfiguration {
+  /**
+   * The provider. Must be `gitlab`.
+   */
+  readonly provider: "gitlab"
+
+  /**
+   * The gitlab project id where the publisher will store generated objects
+   */
+  readonly projectId: number
+
+  /**
+   * The deploy token is generated from gitlab and provides authorization for storing packages
+   */
+  readonly deployToken?: string
+
+  /**
+   * This is only needed to override the default `gitlab.com`
+   */
+  readonly hostname?: string
+}
+
+/**
  * Bitbucket options.
  * https://bitbucket.org/
  * Define `BITBUCKET_TOKEN` environment variable.
- * 
+ *
  * For converting an app password to a usable token, you can utilize this
 ```typescript
 convertAppPassword(owner: string, token: string) {
@@ -282,9 +317,9 @@ export interface BaseS3Options extends PublishConfiguration {
  * AWS credentials are required, please see [getting your credentials](http://docs.aws.amazon.com/sdk-for-javascript/v2/developer-guide/getting-your-credentials.html).
  * Define `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` [environment variables](http://docs.aws.amazon.com/sdk-for-javascript/v2/developer-guide/loading-node-credentials-environment.html).
  * Or in the [~/.aws/credentials](http://docs.aws.amazon.com/sdk-for-javascript/v2/developer-guide/loading-node-credentials-shared.html).
- * 
+ *
  * Example configuration:
- * 
+ *
 ```json
 {
   "build":

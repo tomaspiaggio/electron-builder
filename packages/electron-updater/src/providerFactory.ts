@@ -6,7 +6,7 @@ import {
   CustomPublishOptions,
   GenericServerOptions,
   getS3LikeProviderBaseUrl,
-  GithubOptions,
+  GithubOptions, GitlabOptions,
   KeygenOptions,
   newError,
   PublishConfiguration,
@@ -16,6 +16,7 @@ import { BintrayProvider } from "./providers/BintrayProvider"
 import { BitbucketProvider } from "./providers/BitbucketProvider"
 import { GenericProvider } from "./providers/GenericProvider"
 import { GitHubProvider } from "./providers/GitHubProvider"
+import { GitlabProvider } from "./providers/GitlabProvider"
 import { KeygenProvider } from "./providers/KeygenProvider"
 import { PrivateGitHubProvider } from "./providers/PrivateGitHubProvider"
 import { Provider, ProviderRuntimeOptions } from "./providers/Provider"
@@ -44,6 +45,9 @@ export function createClient(data: PublishConfiguration | AllPublishOptions, upd
 
     case "bitbucket":
       return new BitbucketProvider(data as BitbucketOptions, updater, runtimeOptions)
+
+    case "gitlab":
+      return new GitlabProvider(data as GitlabOptions, updater, runtimeOptions)
 
     case "keygen":
       return new KeygenProvider(data as KeygenOptions, updater, runtimeOptions)
